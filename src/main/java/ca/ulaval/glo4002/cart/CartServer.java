@@ -6,49 +6,54 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 
-import ca.ulaval.glo4002.cart.application.ItemNotFoundException;
+import ca.ulaval.glo4002.cart.context.Context;
 import ca.ulaval.glo4002.cart.interfaces.rest.CartResource;
-import ca.ulaval.glo4002.cart.interfaces.rest.ShopResource;
+import ca.ulaval.glo4002.cart.interfaces.rest.ItemNotFoundExceptionMapper;
 import ca.ulaval.glo4002.cart.interfaces.rest.PersistenceExceptionMapper;
+import ca.ulaval.glo4002.cart.interfaces.rest.ShopResource;
 import ca.ulaval.glo4002.cart.interfaces.rest.filters.CORSFilter;
 
 public class CartServer implements Runnable {
-	private static final int PORT = 7222;
+    private static final int PORT = 7222;
 
-	public static void main(String[] args) {
-		new CartServer().run();
-	}
+    public static void main(String[] args) {
+        new CartServer().run();
+    }
 
-	public void run() {
-		Server server = new Server(PORT);
-		ServletContextHandler contextHandler = new ServletContextHandler(server, "/");
+    public void run() {
+        Server server = new Server(PORT);
+        ServletContextHandler contextHandler = new ServletContextHandler(server, "/");
 
-		// Configuration manuelle au lieu du package scanning
-		ResourceConfig packageConfig = new ResourceConfig()
-				.registerInstances(createClientResource(), createCartResource())
-				.registerInstances(new PersistenceExceptionMapper(), new ItemNotFoundException())
-				.register(new CORSFilter());
+        Context context = Context.create();
+        context.install();
+        context.runFillers();
 
-		ServletContainer container = new ServletContainer(packageConfig);
-		ServletHolder servletHolder = new ServletHolder(container);
+        // Configuration manuelle au lieu du package scanning
+        ResourceConfig packageConfig = new ResourceConfig()
+                .registerInstances(createClientResource(), createCartResource())
+                .registerInstances(new PersistenceExceptionMapper(), new ItemNotFoundExceptionMapper())
+                .register(new CORSFilter());
 
-		contextHandler.addServlet(servletHolder, "/*");
+        ServletContainer container = new ServletContainer(packageConfig);
+        ServletHolder servletHolder = new ServletHolder(container);
 
-		try {
-			server.start();
-			server.join();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			server.destroy();
-		}
-	}
+        contextHandler.addServlet(servletHolder, "/*");
 
-	private CartResource createCartResource() {
-		return new CartResource();
-	}
+        try {
+            server.start();
+            server.join();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            server.destroy();
+        }
+    }
 
-	private Object createClientResource() {
-		return new ShopResource();
-	}
+    private CartResource createCartResource() {
+        return new CartResource();
+    }
+
+    private Object createClientResource() {
+        return new ShopResource();
+    }
 }

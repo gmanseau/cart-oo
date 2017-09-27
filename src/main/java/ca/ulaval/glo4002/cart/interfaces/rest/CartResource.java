@@ -18,28 +18,28 @@ import ca.ulaval.glo4002.cart.domain.shop.ShopItem;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class CartResource {
-	public static final String EMAIL_PARAMETER = "email";
-	public static final String SKU_PARAMETER = "sku";
+    public static final String EMAIL_PARAMETER = "email";
+    public static final String SKU_PARAMETER = "sku";
 
-	private CartApplicationService cartService;
-	private ShopApplicationService shopService;
+    private CartApplicationService cartService;
+    private ShopApplicationService shopService;
 
-	public CartResource() {
-		this.cartService = new CartApplicationService();
-		this.shopService = new ShopApplicationService();
-	}
+    public CartResource() {
+        this.cartService = new CartApplicationService();
+        this.shopService = new ShopApplicationService();
+    }
 
-	@GET
-	public Cart getCart(@PathParam(EMAIL_PARAMETER) String email) {
-		return cartService.findOrCreateCartForClient(email);
-	}
+    @GET
+    public Cart getCart(@PathParam(EMAIL_PARAMETER) String email) {
+        return cartService.findOrCreateCartForClient(email);
+    }
 
-	@PUT
-	@Path("/{" + SKU_PARAMETER + "}")
-	public Response addItemToCart(@PathParam(EMAIL_PARAMETER) String email, @PathParam(SKU_PARAMETER) String sku) {
-		// TODO this resource does too much
-		ShopItem shopItem = shopService.findItemBySku(sku);
-		cartService.addItemToCart(email, shopItem);
-		return Response.ok().build();
-	}
+    @PUT
+    @Path("/{" + SKU_PARAMETER + "}")
+    public Response addItemToCart(@PathParam(EMAIL_PARAMETER) String email, @PathParam(SKU_PARAMETER) String sku) {
+        // TODO this resource does too much
+        ShopItem shopItem = shopService.findItemBySku(sku);
+        cartService.addItemToCart(email, shopItem);
+        return Response.ok().build();
+    }
 }

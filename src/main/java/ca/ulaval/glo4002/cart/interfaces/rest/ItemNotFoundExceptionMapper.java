@@ -8,9 +8,8 @@ import ca.ulaval.glo4002.cart.application.ItemNotFoundException;
 
 public class ItemNotFoundExceptionMapper implements ExceptionMapper<ItemNotFoundException> {
 
-	@Override
-	public Response toResponse(ItemNotFoundException arg0) {
-		return Response.status(Status.NOT_FOUND).build();
-	}
-
+    @Override
+    public Response toResponse(ItemNotFoundException arg0) {
+        return Response.status(Status.NOT_FOUND).build();
+    }
 }

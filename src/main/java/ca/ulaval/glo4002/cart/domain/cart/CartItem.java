@@ -4,18 +4,18 @@ import javax.xml.bind.annotation.XmlElement;
 
 public class CartItem {
 
-	@XmlElement
-	private String name;
+    @XmlElement
+    private String name;
 
-	@XmlElement
-	private int quantity;
+    @XmlElement
+    private int quantity;
 
-	private CartItem() {
-		// JAXB
-	}
+    private CartItem() {
+        // JAXB
+    }
 
-	public CartItem(String name, int quantity) {
-		this.name = name;
-		this.quantity = quantity;
-	}
+    public CartItem(String name, int quantity) {
+        this.name = name;
+        this.quantity = quantity;
+    }
 }

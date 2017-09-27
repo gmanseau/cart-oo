@@ -7,14 +7,13 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
 
-import ca.ulaval.glo4002.cart.application.PersistenceException;
+import ca.ulaval.glo4002.cart.infrastructure.persistence.PersistenceException;
 
 public class PersistenceExceptionMapper implements ExceptionMapper<PersistenceException> {
 
-	@Override
-	public Response toResponse(PersistenceException exception) {
-		Logger.getGlobal().log(Level.SEVERE, exception.getMessage(), exception);
-		return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).build();
-	}
-
+    @Override
+    public Response toResponse(PersistenceException exception) {
+        Logger.getGlobal().log(Level.SEVERE, exception.getMessage(), exception);
+        return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).build();
+    }
 }
